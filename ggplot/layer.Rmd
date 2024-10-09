@@ -1,0 +1,124 @@
+---
+title: "图层(Layers)"
+output: html_document
+date: "2024-10-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+set.seed(42)
+```
+
+## 图层概述
+
+ggplot2的图层结构鼓励我们以一种结构化的方式去设计和构造一张图.
+
+在绘制一张图之前, 要考虑清楚加入这个图层有什么用. 一般来说, 一个图层有以下的三种用处:
+
+- *展示数据(data layer)*. 我们可以直接观察图形中的模式发现数据中的模式, 比如总体结构, 局部结构, 异常值等. 在数据探索阶段, 这往往是唯一的一层
+
+- *展示数据的统计结果(summary layer)*. 在我们对数据建模时, 往往需要对数据给出模型的预测. 显示数据有助于我们改进模型, 并可以帮助我们发现那些推理中会被遗漏的部分.
+这一层通常在数据层之上.
+
+- *添加其它元数据(metadata layer)*. 上下文, 注释, 引用(data about data). 元数据层帮助我们理解原始数据的含义, 有助于跨面板比较数据. 
+常见的元数据包括标签, 指示拐点, 异常值点等.
+
+
+**举个例子**
+
+地图是一种很常见的可视化图.
+- 用空间数据做背景图层
+- 在缩放时会隐藏部分信息(元数据), 使得用户不会对数据的感知造成干扰
+- 在导航时, 相当于使用了"模型", 在背景图层上加入新的图
+
+
+## geom--几何图形对象
+
+```{r individual-geoms}
+df <- data.frame(
+  x = c(3, 1, 5), 
+  y = c(2, 4, 6), 
+  label = c("a","b","c")
+)
+p <- ggplot(df, aes(x, y, label = label)) + 
+  labs(x = NULL, y = NULL) + # Hide axis label
+  theme(plot.title = element_text(size = 12)) # Shrink plot title
+```
+
+
+geom是ggplot2的基本构建块.
+它本身以及它们之间的组合可以构造出很好用的几何图形.
+它们基本都可以用`color`, `size`, `fill`来调节参数.
+
+- `geom_area()`绘制的是线图到坐标轴围成的区域, 多组语句将时区域**堆叠**
+``` {r}
+p + geom_line() + geom_area()
+```
+
+- `geom_bar(stat = "identity")`绘制的是柱状图. 其中`stat = "identity"`因为默认会计算值, 从而报错.同一位置的多个条形图将堆叠在一起.
+```{r}
+p + geom_bar(stat = "identity")
+```
+- `geom_line()`绘制折线图. 后面会详细介绍`group`参数. `geom_line`的作用是将点从左到右连接起来; `geom_path`的作用是类似的, 但是它按照数据在dataframe中出现的顺序将点连接. 上面两个语句可以用参数`linetype`控制`solid, dashed, dotted`.
+```{r}
+p + geom_line(linetype = "dotted")
+p + geom_path(linetype = "solid")
+```
+- `geom_point()`绘制的是散点图. 一个重要的参数是`shape`.
+```{r}
+p+geom_point(shape = "X", size = 10)
+```
+- `geom_polygon()`绘制的是多边形. 它绘制的是把`path`围起来的多边形. 在绘图之前往往需要将数据框的坐标和数据合并.
+```{r}
+p+geom_polygon()
+```
+- `geom_rect(), geom_tile(), geom_raster()`绘制矩形. 其中`geom_rect()`的参数是`xmin, ymin, xmax, ymax`用于控制矩形的四个点. `geom_tile()`用矩形的中心, 长, 宽作为参数`x,y,width,height`. 
+`geom_raster()`是当`tile`的大小都相同时使用的.
+```{r}
+p+geom_tile(width = c(0.1, 0.3, 0.4))
+p+geom_raster(width = c(0.1, 0.3, 0.4)) # 会报错
+```
+- `geom_text()`向图中添加文本. 有`label, angle, family, fanface, hjust, vjust`等参数.
+```{r}
+p+geom_text()+ggtitle(label = "text")
+```
+
+```{r}
+data("diamonds")
+str(diamonds)
+## 散点图
+## 散点图可以反应两个连续变量之间的关系
+## 下面选择观察 caret (weight of the diamond) 和 price (in USD)之间的关系
+ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+  geom_point()
+## 子抽样选取部分样本
+sub_diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
+ggplot(data = sub_diamonds, mapping = aes(x = carat, y = price)) +
+  geom_point()
+## 改变点的颜色, 关于color的cheat sheet, 可以搜索ggplot color names
+ggplot(data = sub_diamonds, mapping = aes(x = carat, y = price)) +
+  geom_point(color = "steelblue")
+## 选择其它变量作为颜色分类指标
+ggplot(sub_diamonds, aes(x = carat, y = price, color = cut)) +
+  geom_point()
+## 线性回归
+ggplot(sub_diamonds, aes(x = carat, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm") ## "loess"可以用局部多项式平滑
+## 分组线性回归
+ggplot(sub_diamonds, aes(x = carat, y = price, group = cut)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+## ggfortify 包支持更多的统计分析结果的可视化
+## 用cut分面
+ggplot(sub_diamonds, aes(x = carat, y = price, group = cut, color = cut)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  facet_grid(~cut)
+## 直接画分类散点图
+ggplot(sub_diamonds, aes(x = carat, y = price, group = cut)) +
+  geom_point() +
+  facet_grid(~ cut)
+```
+
