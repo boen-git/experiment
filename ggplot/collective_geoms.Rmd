@@ -1,0 +1,32 @@
+---
+title: "Collective geoms"
+output: html_document
+date: "2024-10-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+set.seed(42)
+```
+
+在layer文件中, 我们见识了可以按数据中的不同分面, 展示图像.
+这种将多种观测到的数据展示在在一个几何图像上的操作, 可以用collective geom. 它主要是参数`group`在控制.
+
+默认情况下, 参数`group`被映射到所有所有离散型变量的相互作用.可以将族映射到每个组具有不同值的变量来定义分组结构.
+
+我们以下考虑`nlme`包中纵向数据集`Oxboys`, 它记录了个体, 年龄, 身高数据.
+```{r}
+data(Oxboys, package = "nlme")
+head(Oxboys)
+```
+
+## group
+
+希望将数据分成组, 但以相同的方式呈现它们.
+spaghetti plots.
+
+```{r}
+
+```
+

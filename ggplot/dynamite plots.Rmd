@@ -1,0 +1,198 @@
+---
+title: "爆炸图以及为什么我们没有见过"
+output: html_document
+date: "2024-10-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 爆炸图(dynamite plots)引言
+
+Dynamite 指爆炸. 但是神奇的是, 我从来没见过这个图. 因此借此机会梳理一下不同人对它
+的评价. 已有的[一些讨论](https://simplystatistics.org/posts/2019-02-21-dynamite-plots-must-die/)
+表明这种数据呈现的方式是糟糕的, 这里正好梳理一下内容.
+
+爆炸图也被称为bar and line graph(条形与折线图). 但是它的缺点是隐藏了数据的信息.
+
+> Show the data, don't conceal them.
+
+然而, 尽管做出了所有这些努力, 炸药图在科学文献中仍然普遍存在.事实上，在这篇 PLOS Biology 论文中, Tracey Weissgerber 和合著者对“顶级生理学期刊”进行了系统回顾，发现“85.6% 的论文至少包含一张条形图”. 他们继续建议“对研究人员进行数据呈现方面的培训, 鼓励更完整的数据呈现, 并改变期刊编辑政策”. 如果数据集太大，则用箱线图、直方图或平滑密度估计来显示数据的分布会更好.
+
+## 差图
+
+[有人总结了十大差图](https://www.biostat.wisc.edu/~kbroman/topten_worstgraphs/).
+
+已有文献提供了一些讨论插图质量好坏的讨论.
+
+- Wainer H (1984) How to display data badly. The American Statistician 38:137-147
+
+- Carr DB, Nusser SM (1995) Converting tables to plots: A challenge from Iowa State. Statistical Computing & Statistical Graphics Newsletter 6:11-18
+
+- Gelman A, Pasarica C, Dodhia R (2002) Let's practice what we preach: Turning tables into graphs. The American Statistician 56:121-130
+
+- Tufte E (2001) The visual display of quantitative information, 2nd edition. Graphics Press.
+
+- Robbins NB (2004) Creating more effective graphs. Wiley
+
+### 三维折线图
+
+- What's wrong with this one?
+
+Curves rendered as ribbons? The 3-dimensional rendering of the curves is entirely gratuitous.
+
+渲染曲线成三维的丝带完全是没必要的.
+
+- What should have been done?
+
+Without a doubt, it's difficult to display multiple curves simultaneously and ensure that the individual curves may be seen. Colors would be nice, but if color is not allowed, four different line types (solid, dashed, dotted, dash-dotted) might work.
+
+表示不同的折线时, 因该考虑不同颜色的折线, 或者不同线型的折线.
+
+### 含有信息量过少的图片
+
+在出版行业(包括论文发表), 要注意data-ink ratio.
+
+- What's wrong with this one?
+
+If you want your graph to be published in large format, it seems that the American Journal of Human Genetics is the place to which you should aim. This figure spans two pages. Panel D is most interesting; it takes a while to identify that there is any information there at all.
+
+This half-page plot contains little information, and all of the interesting action is way in the lower-left corner.
+
+- What should have been done?
+
+Figure 1D could have been discarded completely, and the whole figure shouldn't take up more than half a page.
+
+Plot either the percent difference between empirical and nominal, and just for the region of interest, or just say that the empirical results exactly matched the nominal ones.
+
+要么直接丢弃没有信息的图, 要么只展示真正令人感兴趣的部分.
+
+### 爆炸图/柱状图
+
+- What's wrong with this one?
+
+The bars and little antennae represent just three data points each.
+
+爆炸图和上方的虚线只代表三个数据点, 反映的信息太少.
+
+While this is better than having an antenna chart for each group, using a separate bar for each individual is unnecessary and hard to read.
+
+如果对每个个体画一个柱状图, 那么阅读起来会比较麻烦.
+
+- What should have been done?
+
+With just three data points in each group, why not just show the data as dots? You could also include line segments at the averages and even confidence intervals...all this in the same amount of space and with less ink.
+
+如果每组只有几个数据点, 就可以直接将数据以点的形式展示出来, 这样可以节约空间/墨水.
+
+It would be much better to use dots rather than bars for the individual values.
+
+对于各个值, 使用点而不是条形要好得多.
+
+
+### 三维饼图
+
+- What's wrong with this one?
+
+The three-dimensional rendering of this pie chart is gratuitous, and pie charts are bad anyway, as humans are notoriously poor at comparing areas. The color is gratuitous, too. Any graph that is meaningful only if the numbers are also cited must be viewed as a failure. That the figure is obviously from Microsoft Excel is another embarrassment.
+
+渲染一个三维饼图完全没有必要, 有时颜色也没有必要, 任何只有在引用数字时才有意义的图表都必须被视为失败. 
+
+- What should have been done?
+
+The authors could have just cited the numbers. Alternatively, a bar plot (without gratuitous 3D) wouldn't be unreasonable.
+
+作者本可以只引用这些数字. 或者条形图也是可行的.
+
+### 展示Q-Q图
+
+- What's wrong with this one?
+
+There's always a lot of wasted space in QQ plots, but these are particularly bad: the figure takes two full pages, and that gray background! I've never seen so much wasted spaced and ink.
+
+- What should have been done?
+
+My understanding of this figure is that the authors are comparing three groups of numbers. They do so in a way that is not very natural. I'd prefer dotplots showing the values in the three groups, side-by-side, with a white background, and using one-quarter of the page.
+
+比较三组数字时, 他们这样做的方式不太自然. 更喜欢用点图并排显示三组中的值, 具有白色背景, 并使用页面的四分之一.
+
+### 三维柱状图
+
+- What's wrong with this one?
+
+The perspective makes it difficult to compare the heights of the cylinders, as the vertical scale changes from front to back. Also, this is a lot of space (and color ink) to convey very little information.
+
+由于三维图的透视关系, 很难比较三维物体的大小关系, 这用了很大的空间描述很少的信息.
+
+- What should have been done?
+
+It must be admitted that it's tricky to fix this figure; one might try four superposed lines.
+
+
+## 可视化对比两组数据
+
+### 准备数据
+
+```{r}
+library(data.table); library(tidyverse); library(gganimate); 
+library(ggbeeswarm); library(rmarkdown); library(knitr)
+theme_set(theme_bw())  # set overall ggplot theme
+set.seed(0)
+n <- 10
+cases <- rnorm(n, 5, 0.25)
+controls <- rnorm(n, 5, 0.25)
+cases <- 2^(cases)
+controls <- 2^(controls)
+cases[1:2] <- c(110, 150) # 引入离群值
+dat <- data.frame(x = factor(rep(c("Controls", "Cases") , each = n), 
+                             levels = c("Controls", "Cases")), 
+                  Outcome = c(controls, cases))
+```
+
+### 一个想法是用抖动图绘制
+
+```{r}
+dat %>% ggplot(aes(x, Outcome)) +
+  geom_jitter(width = 0.05)
+```
+在这个情况下, 我们发现数据右偏, 因此我们可以在对数尺度下重新画图.
+```{r}
+dat %>% ggplot(aes(x, Outcome)) +
+  geom_jitter(width = 0.05) +
+  scale_y_log10()
+```
+如果我们想总结我们的数据, 我们可以使用箱线图.
+```{r}
+dat %>% ggplot(aes(x, Outcome)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.05) +
+  scale_y_log10()
+```
+如果点太多的话, 可以仅仅只用箱线图
+```{r}
+dat %>% ggplot(aes(x, Outcome)) +
+  geom_boxplot() + 
+  scale_y_log10()
+```
+可以用岭图画出两组数据的密度分布.
+```{r}
+library(ggridges)
+dat %>% ggplot(aes(Outcome, x)) +
+  scale_x_log10()+
+  geom_density_ridges(scale = 0.9)
+```
+也可以在岭图上显示数据点:
+```{r}
+dat %>% ggplot(aes(Outcome, x)) +
+  scale_x_log10() +
+  geom_density_ridges(scale = 0.9, 
+                      jittered_points = TRUE, 
+                      position = position_points_jitter(width = 0.05, height = 0), 
+                      point_shape = '|', 
+                      point_size = 3, 
+                      point_alpha = 1, 
+                      alpha = 0.7)
+```
+
+
